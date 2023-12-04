@@ -57,7 +57,7 @@ export class AuthController {
   @Post('/login')
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Login successful',
   })
   @ApiResponse({
@@ -71,7 +71,7 @@ export class AuthController {
   @Post('/registration')
   @ApiOperation({ summary: 'User registration' })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Registration successful',
   })
   @ApiResponse({

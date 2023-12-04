@@ -8,18 +8,18 @@ export class User {
   id: number;
 
   @ApiProperty({ example: 'user@mail.ru', description: 'Email' })
-  @Column({ nullable: false })
+  @Column({ unique: true })
   email: string;
 
   @ApiProperty({ example: '12345678', description: 'Password' })
-  @Column({ nullable: false })
+  @Column()
   password: string;
 
   @ApiProperty({
     example: 'febffe99-9989-463e-bd2f-061d136ae911',
     description: 'Activation link',
   })
-  @Column({ nullable: false })
+  @Column({ unique: true })
   activationLink: string;
 
   @ApiProperty({ example: 'true', description: 'Activation is link used' })
@@ -30,6 +30,6 @@ export class User {
     example: 'cb3093b5-6f9f-4c1e-8981-c598124b27db',
     description: 'Token to reset password',
   })
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   resetToken: string;
 }

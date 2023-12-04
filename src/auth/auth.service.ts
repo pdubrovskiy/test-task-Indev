@@ -26,6 +26,7 @@ export class AuthService {
   ) {}
 
   public async login(userDto: CreateUserDto): Promise<{ token: string }> {
+    console.log(userDto);
     const user = await this.validateUser(userDto);
 
     this.logger.log(LogMessages.SUCCESSFUL_LOGIN);
@@ -118,6 +119,13 @@ export class AuthService {
 
   private async validateUser(userDto: CreateUserDto): Promise<User> {
     const user = await this.userService.getUserByEmail(userDto.email);
+
+    if (!user) {
+      throw new UnauthorizedException({
+        message: Messages.INCORRECT_EMAIL_OR_PASSWORD,
+      });
+    }
+
     const passwordEquals = await this.comparePasswords(
       userDto.password,
       user.password,

@@ -29,6 +29,18 @@ export class UsersService {
     return user;
   }
 
+  public async activateEmail(activationLink: string): Promise<void> {
+    const user = await this.userRepository.findOne({
+      where: { activationLink },
+    });
+    if (!user) {
+      throw new HttpException(Messages.WRONG_LINK, HttpStatus.BAD_REQUEST);
+    }
+    user.isActivated = true;
+    user.resetToken = generateHash();
+    await this.userRepository.save({ ...user });
+  }
+
   public async changePassword(
     email: string,
     newPassword: string,
@@ -38,18 +50,6 @@ export class UsersService {
     });
 
     user.password = newPassword;
-    user.resetToken = generateHash();
-    await this.userRepository.save({ ...user });
-  }
-
-  public async activateEmail(activationLink: string): Promise<void> {
-    const user = await this.userRepository.findOne({
-      where: { activationLink },
-    });
-    if (!user) {
-      throw new HttpException(Messages.WRONG_LINK, HttpStatus.BAD_REQUEST);
-    }
-    user.isActivated = true;
     user.resetToken = generateHash();
     await this.userRepository.save({ ...user });
   }

@@ -62,7 +62,9 @@ export class AuthService {
     };
   }
 
-  public async forgetPassword(email: string) {
+  public async forgetPassword(email: string): Promise<{
+    message: Messages;
+  }> {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user) {
@@ -80,7 +82,9 @@ export class AuthService {
     email: string,
     resetToken: string,
     newPassword: ResetPasswordDto,
-  ) {
+  ): Promise<{
+    message: Messages;
+  }> {
     const user = await this.userService.getUserByEmail(email);
 
     if (!user || user.resetToken !== resetToken) {

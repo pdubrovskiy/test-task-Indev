@@ -16,7 +16,10 @@ export class MailService {
     });
   }
 
-  async sendActivationEmail(to: string, activationLink: string): Promise<void> {
+  public async sendActivationEmail(
+    to: string,
+    activationLink: string,
+  ): Promise<void> {
     const activationLinkForLetter = `${process.env.API_URL}/auth/activate/${to}/${activationLink}`;
     const mailOptions = {
       from: process.env.SMTP_USER,
@@ -34,7 +37,10 @@ export class MailService {
     await this.transporter.sendMail(mailOptions);
   }
 
-  async sendPassWordResetEmail(to: string, resetToken: string): Promise<void> {
+  public async sendPassWordResetEmail(
+    to: string,
+    resetToken: string,
+  ): Promise<void> {
     const resetPasswordLinkForLetter = `${process.env.API_URL}/auth/reset-password/${to}/${resetToken}`;
     const mailOptions = {
       from: process.env.SMTP_USER,

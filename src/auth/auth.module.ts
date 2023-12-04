@@ -10,7 +10,7 @@ import { MailModule } from 'src/mail/mail.module';
   providers: [AuthService],
   imports: [
     JwtModule.register({
-      secret: process.env.PRIVATE_KEY || 'SECRET',
+      secret: process.env.SECRET_KEY || 'SECRET',
       signOptions: {
         expiresIn: '24h',
       },

@@ -50,7 +50,7 @@ export class AuthService {
     );
     const token = await this.generateToken(user);
 
-    this.logger.log(LogMessages.SUCCESSFUl_REGISTRATION);
+    this.logger.log(LogMessages.SUCCESSFUL_REGISTRATION);
     return {
       message: Messages.ACTIVATE_YOUR_EMAIL,
       ...token,
@@ -118,7 +118,14 @@ export class AuthService {
 
   private async validateUser(userDto: CreateUserDto): Promise<User> {
     const user = await this.userService.getUserByEmail(userDto.email);
-    const passwordEquals = await bcrypt.compare(
+
+    if (!user) {
+      throw new UnauthorizedException({
+        message: Messages.INCORRECT_EMAIL_OR_PASSWORD,
+      });
+    }
+
+    const passwordEquals = await this.comparePasswords(
       userDto.password,
       user.password,
     );
@@ -130,5 +137,12 @@ export class AuthService {
     throw new UnauthorizedException({
       message: Messages.INCORRECT_EMAIL_OR_PASSWORD,
     });
+  }
+
+  private async comparePasswords(
+    plainPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(plainPassword, hashedPassword);
   }
 }

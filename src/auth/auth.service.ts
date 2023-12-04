@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -12,9 +13,12 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { LogMessages } from 'src/constants/log-messages';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private userService: UsersService,
     private jwtService: JwtService,
@@ -23,6 +27,8 @@ export class AuthService {
 
   public async login(userDto: CreateUserDto): Promise<{ token: string }> {
     const user = await this.validateUser(userDto);
+
+    this.logger.log(LogMessages.SUCCESSFUL_LOGIN);
     return this.generateToken(user);
   }
 
@@ -43,6 +49,8 @@ export class AuthService {
       user.activationLink,
     );
     const token = await this.generateToken(user);
+
+    this.logger.log(LogMessages.SUCCESSFUl_REGISTRATION);
     return {
       message: Messages.ACTIVATE_YOUR_EMAIL,
       ...token,
@@ -73,6 +81,7 @@ export class AuthService {
 
     await this.mailService.sendPassWordResetEmail(email, user.resetToken);
 
+    this.logger.log(LogMessages.SUCCESSFUl_RESET_LETTER_SENT);
     return {
       message: Messages.RESET_LETTER_SENT,
     };
@@ -116,6 +125,8 @@ export class AuthService {
     if (user && passwordEquals) {
       return user;
     }
+
+    this.logger.error(LogMessages.FAILED_LOGIN);
     throw new UnauthorizedException({
       message: Messages.INCORRECT_EMAIL_OR_PASSWORD,
     });

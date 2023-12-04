@@ -16,5 +16,6 @@ import { UsersModule } from 'src/users/users.module';
     }),
     UsersModule,
   ],
+  exports: [],
 })
 export class AuthModule {}

@@ -11,7 +11,7 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async createUser(dto: CreateUserDto) {
+  public async createUser(dto: CreateUserDto): Promise<User> {
     const user = await this.userRepository.save({
       ...dto,
       activationLink: this.generateActivationLink(),
@@ -20,10 +20,12 @@ export class UsersService {
     return user;
   }
 
-  async getAllUsers(): Promise<User[]> {
-    const users = await this.userRepository.find();
+  public async getUserByEmail(email: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+    });
 
-    return users;
+    return user;
   }
 
   // вынести отсюда

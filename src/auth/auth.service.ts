@@ -26,7 +26,6 @@ export class AuthService {
   ) {}
 
   public async login(userDto: CreateUserDto): Promise<{ token: string }> {
-    console.log(userDto);
     const user = await this.validateUser(userDto);
 
     this.logger.log(LogMessages.SUCCESSFUL_LOGIN);

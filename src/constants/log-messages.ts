@@ -1,5 +1,5 @@
 export enum LogMessages {
-  SUCCESSFUl_REGISTRATION = 'Successful user registration',
+  SUCCESSFUL_REGISTRATION = 'Successful user registration',
   FAILED_REGISTRATION = 'User registration failed',
   SUCCESSFUL_LOGIN = 'Successful user login',
   FAILED_LOGIN = 'User login failed',

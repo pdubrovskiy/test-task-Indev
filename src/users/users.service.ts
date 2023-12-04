@@ -1,13 +1,16 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Messages } from 'src/constants/messages';
 import { generateHash } from 'src/utils/hash-generator';
+import { LogMessages } from 'src/constants/log-messages';
 
 @Injectable()
 export class UsersService {
+  private readonly logger = new Logger(UsersService.name);
+
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
@@ -18,6 +21,7 @@ export class UsersService {
       activationLink: generateHash(),
     });
 
+    this.logger.log(LogMessages.SUCCESSFUL_USER_CREATION);
     return user;
   }
 
@@ -38,6 +42,8 @@ export class UsersService {
     }
     user.isActivated = true;
     user.resetToken = generateHash();
+
+    this.logger.log(LogMessages.SUCCESSFUL_ACTIVATION);
     await this.userRepository.save({ ...user });
   }
 
@@ -51,6 +57,8 @@ export class UsersService {
 
     user.password = newPassword;
     user.resetToken = generateHash();
+
+    this.logger.log(LogMessages.SUCCESSFUl_PASSWORD_CHANGE);
     await this.userRepository.save({ ...user });
   }
 }
